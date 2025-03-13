@@ -1,5 +1,7 @@
 = WildFly Images
 
+WildFly images are available from the https://quay.io/repository/wildfly/wildfly[quay.io/wildfly/wildfly container registry].
+
 WildFly publishes images to run the application server with different JDK versions.
 The tag of the image identifies the version of WildFly as well as the JDK version in the images.
 

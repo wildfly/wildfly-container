@@ -50,6 +50,16 @@ jobs:
       - name: Smoke Test
         run: |
           ./scripts/smoke-test.sh ${{ env.IMAGE_TEST }}
+  doc:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v4.2.2
+    - name: Push documentation to gh-pages
+      uses: manoelcampos/asciidoctor-ghpages-action@v2
+      with:
+        source_dir: ./docs
 
   # Push to the container registry only when a new tag is pushed
   push:

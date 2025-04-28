@@ -40,7 +40,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.9.0
       - name: Build WildFly images
         id: docker_build
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.16.0
         with:
           load: true
           tags: ${{ env.IMAGE_TEST }}
@@ -108,7 +108,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Push WildFly images to container registry
         id: docker_push
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.16.0
         with:
           push: true
           platforms: ${{ matrix.platforms }}

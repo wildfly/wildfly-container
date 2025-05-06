@@ -128,6 +128,10 @@ The server is run as the `jboss` user which has the uid/gid set to `1000`.
 
 WildFly is installed in the `/opt/jboss/wildfly` directory.
 
+## Release Procedure
+
+The procedure to release the WildFly container images is described in the [Release-Procedure wiki page](https://github.com/wildfly/wildfly-container/wiki/Release-Procedure).
+
 ## Source
 
 The source is [available on GitHub](https://github.com/wildfly/wildfly-container).

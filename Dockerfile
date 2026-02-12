@@ -10,6 +10,7 @@ LABEL org.opencontainers.image.source=https://github.com/wildfly/wildfly-contain
 #   that doesn't includes shadow-utils package that provides groupadd & useradd commands
 # Conditional RUN: IF no groupadd AND microdnf THEN: update, install shadow-utils, clean
 RUN if ! [ -x "$(command -v groupadd)" ] && [ -x "$(command -v microdnf)" ]; then microdnf update -y && microdnf install --best --nodocs -y shadow-utils && microdnf clean all; fi
+RUN if [ -x "$(command -v microdnf)" ]; then microdnf install --best --nodocs -y unzip && microdnf clean all; fi
 
 WORKDIR /opt/jboss
 
@@ -18,19 +19,19 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
 
 # Set the WILDFLY_VERSION env variable
 ENV WILDFLY_VERSION=39.0.1.Final
-ENV WILDFLY_SHA1=ced985bd31425efafe594b412f9a382c49109650
+ENV WILDFLY_SHA1=143e76809fb65cc71a781a9b8fa619a782834cc6
 ENV JBOSS_HOME=/opt/jboss/wildfly
 
 USER root
 
-# Add the WildFly distribution to /opt, and make wildfly the owner of the extracted tar content
+# Add the WildFly distribution to /opt, and make wildfly the owner of the extracted content
 # Make sure the distribution is available from a well-known place
 RUN cd $HOME \
-    && curl -L -O https://github.com/wildfly/wildfly/releases/download/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.tar.gz \
-    && sha1sum wildfly-$WILDFLY_VERSION.tar.gz | grep $WILDFLY_SHA1 \
-    && tar xf wildfly-$WILDFLY_VERSION.tar.gz \
+    && curl -L -O https://github.com/wildfly/wildfly/releases/download/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.zip \
+    && sha1sum wildfly-$WILDFLY_VERSION.zip | grep $WILDFLY_SHA1 \
+    && unzip -q wildfly-$WILDFLY_VERSION.zip \
     && mv $HOME/wildfly-$WILDFLY_VERSION $JBOSS_HOME \
-    && rm wildfly-$WILDFLY_VERSION.tar.gz \
+    && rm wildfly-$WILDFLY_VERSION.zip \
     && chown -R jboss:0 ${JBOSS_HOME} \
     && chmod -R g+rw ${JBOSS_HOME}
 

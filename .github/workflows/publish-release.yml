@@ -43,13 +43,13 @@ jobs:
         uses: docker/build-push-action@v6.17.0
         with:
           load: true
-          tags: ${{ env.IMAGE_TEST }}
+          tags: ${{ env.IMAGE_TEST }}
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}
       - name: Smoke Test
         run: |
-          ./scripts/smoke-test.sh ${{ env.IMAGE_TEST }}
+          ./scripts/smoke-test.sh ${{ env.IMAGE_TEST }}
   doc:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest

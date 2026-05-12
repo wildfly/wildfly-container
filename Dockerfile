@@ -17,8 +17,10 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
     chmod 755 /opt/jboss
 
 # Set the WILDFLY_VERSION env variable
-ENV WILDFLY_VERSION=39.0.1.Final
-ENV WILDFLY_ZIP_SHA1=143e76809fb65cc71a781a9b8fa619a782834cc6
+ENV WILDFLY_VERSION=40.0.0.Beta1
+# WildFly variant to use (wildfly or wildfly-ee-10)
+ARG variant=wildfly
+ENV WILDFLY_DIST=${variant}-${WILDFLY_VERSION}
 ENV JBOSS_HOME=/opt/jboss/wildfly
 
 USER root
@@ -26,11 +28,12 @@ USER root
 # Add the WildFly distribution to /opt, and make wildfly the owner of the extracted tar content
 # Make sure the distribution is available from a well-known place
 RUN cd $HOME \
-    && curl -L -O https://github.com/wildfly/wildfly/releases/download/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.zip \
-    && sha1sum wildfly-$WILDFLY_VERSION.zip | grep $WILDFLY_ZIP_SHA1 \
-    && unzip -q wildfly-$WILDFLY_VERSION.zip \
-    && mv $HOME/wildfly-$WILDFLY_VERSION $JBOSS_HOME \
-    && rm wildfly-$WILDFLY_VERSION.zip \
+    && curl -L -O https://github.com/wildfly/wildfly/releases/download/$WILDFLY_VERSION/$WILDFLY_DIST.zip \
+    && curl -L -O https://github.com/wildfly/wildfly/releases/download/$WILDFLY_VERSION/$WILDFLY_DIST.zip.sha1 \
+    && sha1sum $WILDFLY_DIST.zip | grep $(cat $WILDFLY_DIST.zip.sha1) \
+    && unzip -q $WILDFLY_DIST.zip \
+    && mv $HOME/$WILDFLY_DIST $JBOSS_HOME \
+    && rm $WILDFLY_DIST.zip $WILDFLY_DIST.zip.sha1 \
     && chown -R jboss:0 ${JBOSS_HOME} \
     && chmod -R g+rw ${JBOSS_HOME}
 

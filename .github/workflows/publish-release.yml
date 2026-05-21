@@ -23,13 +23,10 @@ jobs:
       IMAGE_TEST: wildfly-test:latest
     strategy:
       matrix:
-        include:
-          - jdk-version: 17
-            dist: ubi9-minimal
-            platforms: linux/amd64
-          - jdk-version: 21
-            dist: ubi9-minimal
-            platforms: linux/amd64
+        jdk-version: [17, 21]
+        variant: [wildfly, wildfly-ee-10]
+        dist: [ubi9-minimal]
+        platforms: [linux/amd64]
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -43,10 +40,12 @@ jobs:
         uses: docker/build-push-action@v6.19.2
         with:
           load: true
+          platforms: ${{ matrix.platforms }}
           tags: ${{ env.IMAGE_TEST }}
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}
+            variant=${{ matrix.variant }}
       - name: Smoke Test
         run: |
           ./scripts/smoke-test.sh ${{ env.IMAGE_TEST }}
@@ -71,13 +70,18 @@ jobs:
       JDK_VERSION_FOR_LATEST: 21
     strategy:
       matrix:
+        jdk-version: [17, 21]
+        variant: [wildfly, wildfly-ee-10]
+        dist: [ubi9-minimal]
         include:
           - jdk-version: 17
-            dist: ubi9-minimal
             platforms: linux/amd64,linux/arm64,linux/ppc64le
           - jdk-version: 21
-            dist: ubi9-minimal
             platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
+          - variant: wildfly
+            image-suffix: ""
+          - variant: wildfly-ee-10
+            image-suffix: "-ee-10"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -86,7 +90,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.7.0
         with:
-          images: ${{ secrets.REGISTRY }}/${{ secrets.IMAGE }}
+          images: ${{ secrets.REGISTRY }}/${{ secrets.IMAGE }}${{ matrix.image-suffix }}
           flavor: |
             latest=false
           tags: |
@@ -115,5 +119,6 @@ jobs:
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}
+            variant=${{ matrix.variant }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

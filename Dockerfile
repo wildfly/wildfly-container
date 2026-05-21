@@ -17,7 +17,7 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
     chmod 755 /opt/jboss
 
 # Set the WILDFLY_VERSION env variable
-ENV WILDFLY_VERSION=40.0.0.Beta1
+ENV WILDFLY_VERSION=40.0.0.Final
 # WildFly variant to use (wildfly or wildfly-ee-10)
 ARG variant=wildfly
 ENV WILDFLY_DIST=${variant}-${WILDFLY_VERSION}

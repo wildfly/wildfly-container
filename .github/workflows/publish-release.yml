@@ -27,6 +27,15 @@ jobs:
         variant: [wildfly, wildfly-ee-10]
         dist: [ubi9-minimal]
         platforms: [linux/amd64]
+        include:
+          - jdk-version: 25
+            variant: wildfly
+            dist: ubi10-minimal
+            platforms: linux/amd64
+          - jdk-version: 25
+            variant: wildfly-ee-10
+            dist: ubi10-minimal
+            platforms: linux/amd64
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -78,6 +87,16 @@ jobs:
             platforms: linux/amd64,linux/arm64,linux/ppc64le
           - jdk-version: 21
             platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
+          - jdk-version: 25
+            variant: wildfly
+            dist: ubi10-minimal
+            platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
+            image-suffix: ""
+          - jdk-version: 25
+            variant: wildfly-ee-10
+            dist: ubi10-minimal
+            platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
+            image-suffix: "-ee-10"
           - variant: wildfly
             image-suffix: ""
           - variant: wildfly-ee-10

@@ -1,6 +1,6 @@
 # Contributing guide
 
-**First off all, thank you for taking the time to contribute to the Docker images for WildFly!** 
+**First off all, thank you for taking the time to contribute to the Container images for WildFly!** 
 
 ## Legal
 
@@ -17,12 +17,12 @@ For background, see the Linux Foundation’s guidance:
 
 ## Issues & Requests for enhancement
 
-This project uses GitHub to manage issues and RFEs. All issues can be found https://github.com/wildfly/wildfly-container/issues[here].
+This project uses GitHub to manage issues and RFEs. All issues can be found [here](https://github.com/wildfly/wildfly-container/issues).
 
 To create a new issue, comment on an existing issue, or assign an issue to yourself, you'll need to first a GitHub account.
 
 ## Good First Issues
 
-Check out our issues with the `good-first-issue` label. These are a triaged set of issues that are great for getting started on our project. These can be found https://github.com/wildfly/wildfly-container/issues?q=is%3Aissue+is%3Aopen+label%3Agood-first-issue[here].
+Check out our issues with the `good-first-issue` label. These are a triaged set of issues that are great for getting started on our project. These can be found [here](https://github.com/wildfly/wildfly-container/issues?q=is%3Aissue+is%3Aopen+label%3Agood-first-issue).
 
 Lastly, this project is an open source project. Please act responsibly, be nice, polite and enjoy!

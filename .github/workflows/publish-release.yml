@@ -21,21 +21,17 @@ jobs:
     # Only build linux/amd64 images for testing
     env:
       IMAGE_TEST: wildfly-test:latest
+      PLATFORMS: linux/amd64
     strategy:
       matrix:
-        jdk-version: [17, 21]
+        jdk-version: [21, 25]
         variant: [wildfly, wildfly-ee-10]
-        dist: [ubi9-minimal]
-        platforms: [linux/amd64]
+        dist: [ubi10-minimal]
         include:
-          - jdk-version: 25
-            variant: wildfly
-            dist: ubi10-minimal
-            platforms: linux/amd64
-          - jdk-version: 25
-            variant: wildfly-ee-10
-            dist: ubi10-minimal
-            platforms: linux/amd64
+          - variant: wildfly
+            image-suffix: ""
+          - variant: wildfly-ee-10
+            image-suffix: "-ee-10"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -49,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v6.19.2
         with:
           load: true
-          platforms: ${{ matrix.platforms }}
+          platforms: ${{ env.PLATFORMS }}
           tags: ${{ env.IMAGE_TEST }}
           build-args: |
             jdk=${{ matrix.jdk-version }}
@@ -76,27 +72,14 @@ jobs:
     if: startsWith(github.event.ref, 'refs/tags/')
     env:
       # Put the "latest" tag on this JDK version
-      JDK_VERSION_FOR_LATEST: 21
+      JDK_VERSION_FOR_LATEST: 25
+      PLATFORMS: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
     strategy:
       matrix:
-        jdk-version: [17, 21]
+        jdk-version: [21, 25]
         variant: [wildfly, wildfly-ee-10]
-        dist: [ubi9-minimal]
+        dist: [ubi10-minimal]
         include:
-          - jdk-version: 17
-            platforms: linux/amd64,linux/arm64,linux/ppc64le
-          - jdk-version: 21
-            platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
-          - jdk-version: 25
-            variant: wildfly
-            dist: ubi10-minimal
-            platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
-            image-suffix: ""
-          - jdk-version: 25
-            variant: wildfly-ee-10
-            dist: ubi10-minimal
-            platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
-            image-suffix: "-ee-10"
           - variant: wildfly
             image-suffix: ""
           - variant: wildfly-ee-10
@@ -134,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v6.19.2
         with:
           push: true
-          platforms: ${{ matrix.platforms }}
+          platforms: ${{ env.PLATFORMS }}
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}

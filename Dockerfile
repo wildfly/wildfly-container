@@ -23,6 +23,10 @@ ARG variant=wildfly
 ENV WILDFLY_DIST=${variant}-${WILDFLY_VERSION}
 ENV JBOSS_HOME=/opt/jboss/wildfly
 
+# Add the WildFly scripts (jboss-cli.sh, standalone.sh, add-user.sh, ...) to the PATH
+# so they can be invoked directly without their full path.
+ENV PATH=${JBOSS_HOME}/bin:${PATH}
+
 USER root
 
 # Add the WildFly distribution to /opt, and make wildfly the owner of the extracted tar content

@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4.2.0
       - name: Set up Docker Buildx
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out the repo
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v7.0.1
     - name: Push documentation to gh-pages
       uses: manoelcampos/asciidoctor-ghpages-action@v2
       with:
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v6.0.0

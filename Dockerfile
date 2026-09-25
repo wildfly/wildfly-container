@@ -14,7 +14,8 @@ RUN microdnf update -y && \
 WORKDIR /opt/jboss
 
 RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s /sbin/nologin -c "JBoss user" jboss && \
-    chmod 755 /opt/jboss
+    chown -R jboss:0 /opt/jboss && \
+    chmod -R g+rwX /opt/jboss
 
 # Set the WILDFLY_VERSION env variable
 ENV WILDFLY_VERSION=41.0.1.Final

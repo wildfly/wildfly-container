@@ -25,13 +25,11 @@ jobs:
     strategy:
       matrix:
         jdk-version: [21, 25]
-        variant: [wildfly, wildfly-ee-10]
+        variant: [wildfly]
         dist: [ubi10-minimal]
         include:
           - variant: wildfly
             image-suffix: ""
-          - variant: wildfly-ee-10
-            image-suffix: "-ee-10"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -77,13 +75,11 @@ jobs:
     strategy:
       matrix:
         jdk-version: [21, 25]
-        variant: [wildfly, wildfly-ee-10]
+        variant: [wildfly]
         dist: [ubi10-minimal]
         include:
           - variant: wildfly
             image-suffix: ""
-          - variant: wildfly-ee-10
-            image-suffix: "-ee-10"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo

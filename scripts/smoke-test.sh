@@ -22,8 +22,7 @@ check_wildfly_up_and_running() {
       echo "Failed to get WildFly up and running within $max_time seconds."
       return 1
     fi
-    docker container logs ${CONTAINER_ID} | grep WFLYSRV0025
-    if [ $? -eq 0 ]; then
+    if docker container logs "${CONTAINER_ID}" 2>&1 | grep -q WFLYSRV0025; then
       echo "Success! WildFly is up and running."
       return 0
     fi
@@ -32,10 +31,9 @@ check_wildfly_up_and_running() {
 }
 
 check_wildfly_version() {
-  docker container logs ${CONTAINER_ID} | grep WFLYSRV0025 | grep ${WILDFLY_VERSION}
-  if [ $? -eq 0 ]; then
+  if docker container logs "${CONTAINER_ID}" 2>&1 | grep -q "WFLYSRV0025.*${WILDFLY_VERSION}"; then
     echo "Success! WildFly is using version ${WILDFLY_VERSION}."
-   return 0
+    return 0
   fi
   return 1
 }
@@ -43,12 +41,14 @@ check_wildfly_version() {
 # Get the WildFly version by cutting "ENV WILDFLY_VERSION="
 WILDFLY_VERSION=$(grep "ENV WILDFLY_VERSION=" Dockerfile | cut -c21-)
 
-docker run --rm -p 8080:8080 ${WILDFLY_IMAGE} &
-sleep 2
-CONTAINER_ID=$(docker ps -l -q)
+# Capture the ID returned by this exact `docker run`; `docker ps -l` can instead
+# select the Buildx/BuildKit container while the WildFly image is still starting.
+CONTAINER_ID=$(docker run -d --rm -p 8080:8080 "${WILDFLY_IMAGE}")
+trap 'docker kill "${CONTAINER_ID}" >/dev/null 2>&1 || true' EXIT
 
 if ! check_wildfly_up_and_running; then
-    echo "WildFly did not boot up properly."
+    echo "WildFly did not boot up properly. Its container logs follow:"
+    docker container logs "${CONTAINER_ID}" 2>&1 || true
     exit 1
 fi
 
@@ -58,8 +58,6 @@ if ! check_http_status; then
 fi
 
 if ! check_wildfly_version; then
-    echo "WildFly did not use the expected ${WILDFY_VERSION} version."
+    echo "WildFly did not use the expected ${WILDFLY_VERSION} version."
     exit 1
 fi
-
-docker kill ${CONTAINER_ID}

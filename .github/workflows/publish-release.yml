@@ -10,11 +10,13 @@ on:
   push:
     branches:
       - "main"
+      - "41.x"
     tags:
       - "*"
   pull_request:
     branches:
       - "main"
+      - "41.x"
 
 jobs:
   test:
